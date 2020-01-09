@@ -1640,6 +1640,9 @@ ptestLevel: "#"^mregn	is mregn  { export *[const]:1 mregn; }
 @ifdef CPU32
 #TODO: implement interrupt mask → EBI; STOP
 :lpstop "#"^d16			is opbig=0xf8 & d8base=0x00; opbig=0x01 & d8base=0xC0; d16				{ SR = d16; }
+
+#TODO: implement: if (background mode enabled) then enter Background Mode else Format/Vector offset  → –(SSP); PC → –(SSP); SR  → –(SSP); (Vector) → PC
+:bgnd				is opbig=0x4A & d8base=0xFA { }
 @endif # CPU32
 
 :sub.b eab,reg9dnb		is (op=9 & reg9dnb & op68=0)... & eab
