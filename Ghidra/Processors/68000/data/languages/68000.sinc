@@ -287,7 +287,12 @@ define context contextreg
   extGUARD = (14,14)        # guard for saving off modes before starting instructions
 ;
 
+@ifdef CPU32
 attach variables [ regdn regxdn reg9dn regdr regdq regsdn regdu regdc regdu2 regdc2 tbl_reg ]    [ D0 D1 D2 D3 D4 D5 D6 D7 ];
+@else
+attach variables [ regdn regxdn reg9dn regdr regdq regsdn regdu regdc regdu2 regdc2 ]    [ D0 D1 D2 D3 D4 D5 D6 D7 ];
+@endif
+
 attach variables [ fldoffreg fldwdreg f_reg fcnt fkfacreg fldynreg ]    [ D0 D1 D2 D3 D4 D5 D6 D7 ];
 attach variables [ regdnw regxdnw reg9dnw regsdnw regduw regdcw regdu2w regdc2w ] [ D0w D1w D2w D3w D4w D5w D6w D7w ];
 attach variables [ regdnb reg9dnb regsdnb regdub regdcb ]         [ D0b D1b D2b D3b D4b D5b D6b D7b ];
@@ -1693,9 +1698,9 @@ tblsign: "s"   is tbl_sign=1 { }
 
 #TODO: Finish TBLxx instruction implementation:
 # Rounded Table Lookup and Interpolate
-:tbl^tblsign^".b" eab,regxdn    is (opbig=0xF8 & op67=0 & $(CTL_ADDR_MODES); tbl_size=0 & tblsign & tbl_round=0 & regxdn) ... & eab { }
-:tbl^tblsign^".w" eaw,regxdn    is (opbig=0xF8 & op67=0 & $(CTL_ADDR_MODES); tbl_size=1 & tblsign & tbl_round=0 & regxdn) ... & eaw { }
-:tbl^tblsign^".l" eal,regxdn    is (opbig=0xF8 & op67=0 & $(CTL_ADDR_MODES); tbl_size=2 & tblsign & tbl_round=0 & regxdn) ... & eal { }
+:tbl^tblsign^".b" eab,regxdn    is (opbig=0xF8 & op67=0 & $(PREDEC_CTL_ADDR_MODES); tbl_size=0 & tblsign & tbl_round=0 & regxdn) ... & eab { }
+:tbl^tblsign^".w" eaw,regxdn    is (opbig=0xF8 & op67=0 & $(PREDEC_CTL_ADDR_MODES); tbl_size=1 & tblsign & tbl_round=0 & regxdn) ... & eaw { }
+:tbl^tblsign^".l" eal,regxdn    is (opbig=0xF8 & op67=0 & $(PREDEC_CTL_ADDR_MODES); tbl_size=2 & tblsign & tbl_round=0 & regxdn) ... & eal { }
 
 # Rounded Data Register Interpolate
 :tbl^tblsign^".b" regdn-tbl_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_size=0 & tblsign & tbl_round=0 & tbl_reg & regxdn { }
@@ -1703,9 +1708,9 @@ tblsign: "s"   is tbl_sign=1 { }
 :tbl^tblsign^".l" regdn-tbl_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_size=2 & tblsign & tbl_round=0 & tbl_reg & regxdn { }
 
 # Unrounded Table Lookup and Interpolate
-:tbl^tblsign^"n.b" eab,regxdn	is (opbig=0xF8 & op67=0 & $(CTL_ADDR_MODES); tbl_size=0 & tblsign & tbl_round=1 & regxdn) ... & eab { }
-:tbl^tblsign^"n.w" eaw,regxdn	is (opbig=0xF8 & op67=0 & $(CTL_ADDR_MODES); tbl_size=1 & tblsign & tbl_round=1 & regxdn) ... & eaw { }
-:tbl^tblsign^"n.l" eal,regxdn	is (opbig=0xF8 & op67=0 & $(CTL_ADDR_MODES); tbl_size=2 & tblsign & tbl_round=1 & regxdn) ... & eal { }
+:tbl^tblsign^"n.b" eab,regxdn	is (opbig=0xF8 & op67=0 & $(PREDEC_CTL_ADDR_MODES); tbl_size=0 & tblsign & tbl_round=1 & regxdn) ... & eab { }
+:tbl^tblsign^"n.w" eaw,regxdn	is (opbig=0xF8 & op67=0 & $(PREDEC_CTL_ADDR_MODES); tbl_size=1 & tblsign & tbl_round=1 & regxdn) ... & eaw { }
+:tbl^tblsign^"n.l" eal,regxdn	is (opbig=0xF8 & op67=0 & $(PREDEC_CTL_ADDR_MODES); tbl_size=2 & tblsign & tbl_round=1 & regxdn) ... & eal { }
 
 # Unrounded Data Register Interpolate
 :tbl^tblsign^"n.b" regdn-tbl_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_size=0 & tblsign & tbl_round=1 & tbl_reg & regxdn { }

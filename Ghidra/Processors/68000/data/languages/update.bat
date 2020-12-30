@@ -1,0 +1,1 @@
+copy C:\apps\ghidra_9.2.1_PUBLIC\Ghidra\Processors\68000\data\languages\68000.sinc
