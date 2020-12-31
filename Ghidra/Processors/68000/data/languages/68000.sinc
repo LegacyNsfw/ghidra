@@ -1721,6 +1721,8 @@ ptestLevel: "#"^mregn	is mregn  { export *[const]:1 mregn; }
 
 @ifdef CPU32
 
+#TODO: Finish TBLxx instruction implementation:
+
 tbl_eal: (tbl_regan) is tbl_mode=2 & tbl_regan			{ export *:4 tbl_regan; }
 # tbl_eal: -(tbl_regan) is tbl_mode=4 & tbl_regan			{ tbl_regan = tbl_regan - 4; export *:4 tbl_regan; }
 # tbl_eal: (d16,tbl_regan) is tbl_mode=5 & tbl_regan; d16		{ local tmp  = tbl_regan + d16; export *:4 tmp; }
@@ -1757,27 +1759,54 @@ tblsign: "s"   is tbl_sign=1 { }
 tbldrsign: "u"   is tbl_dr_sign=0 { }
 tbldrsign: "s"   is tbl_dr_sign=1 { }
 
-#TODO: Finish TBLxx instruction implementation:
+define pcodeop tableLookup;
 
 # Rounded Table Lookup and Interpolate
-:tbl^tblsign^".b" tbl_eab,tbl_regxdn    is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=0 & tblsign & tbl_round=0 & tbl_regxdn) ... & tbl_eab { }
-:tbl^tblsign^".w" tbl_eaw,tbl_regxdn    is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=1 & tblsign & tbl_round=0 & tbl_regxdn) ... & tbl_eaw { }
-:tbl^tblsign^".l" tbl_eal,tbl_regxdn    is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=2 & tblsign & tbl_round=0 & tbl_regxdn) ... & tbl_eal { }
 
-# Rounded Data Register Interpolate
-:tbl^tbldrsign^".b" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=0 & tbldrsign & tbl_dr_round=0 & tbl_dr_reg & regxdn { }
-:tbl^tbldrsign^".w" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=1 & tbldrsign & tbl_dr_round=0 & tbl_dr_reg & regxdn { }
-:tbl^tbldrsign^".l" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=2 & tbldrsign & tbl_dr_round=0 & tbl_dr_reg & regxdn { }
+:tbl^tblsign^".b" tbl_eab,tbl_regxdn    is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=0 & tblsign & tbl_round=0 & tbl_regxdn) ... & tbl_eab
+	{ tbl_regxdn = tableLookup(tbl_regxdn, tbl_eab); }
+	
+:tbl^tblsign^".w" tbl_eaw,tbl_regxdn    is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=1 & tblsign & tbl_round=0 & tbl_regxdn) ... & tbl_eaw
+	{ tbl_regxdn = tableLookup(tbl_regxdn, tbl_eaw); }
+	
+:tbl^tblsign^".l" tbl_eal,tbl_regxdn    is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=2 & tblsign & tbl_round=0 & tbl_regxdn) ... & tbl_eal
+	{ tbl_regxdn = tableLookup(tbl_regxdn, tbl_eal); }
 
 # Unrounded Table Lookup and Interpolate
-:tbl^tblsign^"n.b" tbl_eab,tbl_regxdn	is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=0 & tblsign & tbl_round=1 & tbl_regxdn) ... & tbl_eab { }
-:tbl^tblsign^"n.w" tbl_eaw,tbl_regxdn	is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=1 & tblsign & tbl_round=1 & tbl_regxdn) ... & tbl_eaw { }
-:tbl^tblsign^"n.l" tbl_eal,tbl_regxdn	is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=2 & tblsign & tbl_round=1 & tbl_regxdn) ... & tbl_eal { }
+
+:tbl^tblsign^"n.b" tbl_eab,tbl_regxdn	is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=0 & tblsign & tbl_round=1 & tbl_regxdn) ... & tbl_eab
+	{ tbl_regxdn = tableLookup(tbl_regxdn, tbl_eab); }
+
+:tbl^tblsign^"n.w" tbl_eaw,tbl_regxdn	is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=1 & tblsign & tbl_round=1 & tbl_regxdn) ... & tbl_eaw
+	{ tbl_regxdn = tableLookup(tbl_regxdn, tbl_eaw); }
+
+:tbl^tblsign^"n.l" tbl_eal,tbl_regxdn	is (tbl_opbig=0xF8 & tbl_op67=0 & $(TBL_ADDR_MODES) & tbl_size=2 & tblsign & tbl_round=1 & tbl_regxdn) ... & tbl_eal
+	{ tbl_regxdn = tableLookup(tbl_regxdn, tbl_eal); }
+
+define pcodeop interpolate;
+
+# Rounded Data Register Interpolate
+
+:tbl^tbldrsign^".b" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=0 & tbldrsign & tbl_dr_round=0 & tbl_dr_reg & regxdn
+	{ regxdn = interpolate(regdn, tbl_dr_reg); }
+	
+:tbl^tbldrsign^".w" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=1 & tbldrsign & tbl_dr_round=0 & tbl_dr_reg & regxdn
+	{ regxdn = interpolate(regdn, tbl_dr_reg); }
+
+:tbl^tbldrsign^".l" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=2 & tbldrsign & tbl_dr_round=0 & tbl_dr_reg & regxdn
+	{ regxdn = interpolate(regdn, tbl_dr_reg); }
 
 # Unrounded Data Register Interpolate
-:tbl^tbldrsign^"n.b" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=0 & tbldrsign & tbl_dr_round=1 & tbl_dr_reg & regxdn { }
-:tbl^tbldrsign^"n.w" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=1 & tbldrsign & tbl_dr_round=1 & tbl_dr_reg & regxdn { }
-:tbl^tbldrsign^"n.l" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=2 & tbldrsign & tbl_dr_round=1 & tbl_dr_reg & regxdn { }
+
+:tbl^tbldrsign^"n.b" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=0 & tbldrsign & tbl_dr_round=1 & tbl_dr_reg & regxdn
+	{ regxdn = interpolate(regdn, tbl_dr_reg); }
+
+:tbl^tbldrsign^"n.w" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=1 & tbldrsign & tbl_dr_round=1 & tbl_dr_reg & regxdn
+	{ regxdn = interpolate(regdn, tbl_dr_reg); }
+
+:tbl^tbldrsign^"n.l" regdn:tbl_dr_reg,regxdn  is opbig=0xF8 & op37=0 & mode=0 & regdn ; tbl_dr_size=2 & tbldrsign & tbl_dr_round=1 & tbl_dr_reg & regxdn
+	{ regxdn = interpolate(regdn, tbl_dr_reg); }
+
 @endif # CPU32
 
 
