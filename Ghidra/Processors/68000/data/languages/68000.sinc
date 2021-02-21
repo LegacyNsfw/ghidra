@@ -311,15 +311,16 @@ define context contextreg
 
 @ifdef CPU32
 attach variables [ regdn regxdn reg9dn regdr regdq regsdn regdu regdc regdu2 regdc2 tbl_regxdn tbl_dr_reg ]    [ D0 D1 D2 D3 D4 D5 D6 D7 ];
+attach variables [ regan regxan reg9an regfan regsan aregx tbl_regan]   [ A0 A1 A2 A3 A4 A5 A6 SP ];
 @else
 attach variables [ regdn regxdn reg9dn regdr regdq regsdn regdu regdc regdu2 regdc2 ]    [ D0 D1 D2 D3 D4 D5 D6 D7 ];
+attach variables [ regan regxan reg9an regfan regsan aregx ]   [ A0 A1 A2 A3 A4 A5 A6 SP ];
 @endif
 
 attach variables [ fldoffreg fldwdreg f_reg fcnt fkfacreg fldynreg ]    [ D0 D1 D2 D3 D4 D5 D6 D7 ];
 attach variables [ regdnw regxdnw reg9dnw regsdnw regduw regdcw regdu2w regdc2w ] [ D0w D1w D2w D3w D4w D5w D6w D7w ];
 attach variables [ regdnb reg9dnb regsdnb regdub regdcb ]         [ D0b D1b D2b D3b D4b D5b D6b D7b ];
 attach variables [ regda regda2 ]  [ D0 D1 D2 D3 D4 D5 D6 D7 A0 A1 A2 A3 A4 A5 A6 SP ];
-attach variables [ regan regxan reg9an regfan regsan aregx ]   [ A0 A1 A2 A3 A4 A5 A6 SP ];
 attach variables [ reganw regxanw regsanw ]        [ A0w A1w A2w A3w A4w A5w A6w A7w ];
 attach variables [ reganb regsanb ]                [ A0b A1b A2b A3b A4b A5b A6b A7b ];
 
